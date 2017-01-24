@@ -20,9 +20,11 @@ public class Book implements Serializable {
 
 	private String genre;
 
-	private Writer author;
+	private String author;
 
 	private LocalDate publicationDate;
+
+	private String publisher;
 
 	@Override
 	public int hashCode() {
@@ -49,11 +51,11 @@ public class Book implements Serializable {
 		return true;
 	}
 
-	public Writer getAuthor() {
+	public String getAuthor() {
 		return author;
 	}
 
-	public void setAuthor(Writer author) {
+	public void setAuthor(String author) {
 		this.author = author;
 	}
 
@@ -95,6 +97,14 @@ public class Book implements Serializable {
 
 	public void setPublicationDate(LocalDate publicationDate) {
 		this.publicationDate = publicationDate;
+	}
+
+	public String getPublisher() {
+		return publisher;
+	}
+
+	public void setPublisher(String publisher) {
+		this.publisher = publisher;
 	}
 
 }
