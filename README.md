@@ -1,6 +1,7 @@
 # Spring Data MapDB
 
 This is [Spring Data](http://projects.spring.io/spring-data/) module for a [MapDB: database engine](https://github.com/jankotek/mapdb)
+Many thanks to [Spring Data Hazelcast](https://github.com/hazelcast/spring-data-hazelcast) for an inspiration.
 
 ## Installation
 
@@ -53,4 +54,4 @@ Not so much.
 
 ## License
 
-¯\_(ツ)_/¯
+`¯\_(ツ)_/¯`
