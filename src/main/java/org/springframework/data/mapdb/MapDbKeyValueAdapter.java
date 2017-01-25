@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2017-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public class MapDbKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	@Override
 	public void clear() {
-		mapDb.getAllNames().forEach((name) -> deleteAllOf(name));
+		mapDb.close();
 	}
 
 	@Override

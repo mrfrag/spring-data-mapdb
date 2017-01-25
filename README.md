@@ -40,6 +40,8 @@ public class RepositoryConfiguration {
 }
 ```
 
+for detailed example check `src/test/java/org/springframework/data/mapdb/example/`
+
 ## Contributing
 
 1. Fork it!

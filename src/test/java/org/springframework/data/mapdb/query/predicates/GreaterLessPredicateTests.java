@@ -12,9 +12,10 @@ public class GreaterLessPredicateTests {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void testLess() {
-		Predicate predicate = GreaterLessPredicate.le(10l);
+		Predicate predicate = GreaterLessPredicate.ls(10l);
 
 		Assert.assertTrue(predicate.apply(5));
+		Assert.assertFalse(predicate.apply(10));
 		Assert.assertFalse(predicate.apply(15));
 
 		Assert.assertTrue(predicate.apply(new Integer(8)));
@@ -27,6 +28,7 @@ public class GreaterLessPredicateTests {
 		Predicate predicate = GreaterLessPredicate.gr(10);
 
 		Assert.assertTrue(predicate.apply(15));
+		Assert.assertFalse(predicate.apply(10));
 		Assert.assertFalse(predicate.apply(5));
 
 		Assert.assertTrue(predicate.apply(new Integer(18)));

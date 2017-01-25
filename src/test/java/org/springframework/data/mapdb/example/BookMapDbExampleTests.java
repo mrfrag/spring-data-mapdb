@@ -34,13 +34,14 @@ public class BookMapDbExampleTests {
 		books = new ArrayList<>(3);
 		for (Object[] item : BOOKS_DATA) {
 			Book book = new Book();
-			book.setIsbn((String) item[1]);
-			book.setTitle((String) item[2]);
-			book.setPages((int) item[3]);
-			book.setGenre((String) item[4]);
-			book.setAuthor((String) item[5]);
-			book.setPublicationDate((LocalDate) item[6]);
-			book.setPublisher((String) item[7]);
+			book.setIsbn((String) item[0]);
+			book.setTitle((String) item[1]);
+			book.setPages((int) item[2]);
+			book.setGenre((String) item[3]);
+			book.setAuthor((String) item[4]);
+			book.setPublicationDate((LocalDate) item[5]);
+			book.setPublisher((String) item[6]);
+			books.add(book);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class BookMapDbExampleTests {
 		booksFromRepository = bookRepository.findByGenre(books.get(0).getGenre(), new Sort(Direction.DESC, "pages"));
 		Assert.assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
 		Assert.assertEquals(3, booksFromRepository.size());
-		Assert.assertEquals(books.get(3), booksFromRepository.get(0));
+		Assert.assertEquals(books.get(1), booksFromRepository.get(0));
 		booksFromRepository.clear();
 
 		Iterable<Book> iBooks = bookRepository.findAll(new Sort(Direction.ASC, "publicationDate"));
