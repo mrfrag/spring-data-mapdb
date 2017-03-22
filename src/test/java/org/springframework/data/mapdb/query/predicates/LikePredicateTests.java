@@ -1,5 +1,8 @@
 package org.springframework.data.mapdb.query.predicates;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.function.Predicate;
 
 import org.junit.Assert;
@@ -12,8 +15,8 @@ public class LikePredicateTests {
 	public void testLike() {
 		Predicate predicatre = new LikePredicate("%some%");
 
-		Assert.assertTrue(predicatre.test("this is some text"));
-		Assert.assertFalse(predicatre.test("this is another text"));
+		assertTrue(predicatre.test("this is some text"));
+		assertFalse(predicatre.test("this is another text"));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -21,7 +24,7 @@ public class LikePredicateTests {
 	public void testLikeCaseSensitive() {
 		Predicate predicatre = new LikePredicate("%some%");
 
-		Assert.assertFalse(predicatre.test("this is Some text"));
+		assertFalse(predicatre.test("this is Some text"));
 	}
 
 }

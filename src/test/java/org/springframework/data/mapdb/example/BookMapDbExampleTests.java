@@ -1,15 +1,18 @@
 package org.springframework.data.mapdb.example;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.ContextConfiguration;
@@ -50,26 +53,31 @@ public class BookMapDbExampleTests {
 
 		bookRepository.save(books);
 
-		Assert.assertEquals(books.get(0), bookRepository.findOne(books.get(0).getIsbn()));
+		assertEquals(books.get(0), bookRepository.findOne(books.get(0).getIsbn()));
 
 		List<Book> booksFromRepository = bookRepository.findByTitle(books.get(0).getTitle());
-		Assert.assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
-		Assert.assertEquals(books.get(0), booksFromRepository.get(0));
+		assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
+		assertEquals(books.get(0), booksFromRepository.get(0));
 		booksFromRepository.clear();
 
 		booksFromRepository = bookRepository.findByGenre(books.get(0).getGenre(), new Sort(Direction.DESC, "pages"));
-		Assert.assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
-		Assert.assertEquals(3, booksFromRepository.size());
-		Assert.assertEquals(books.get(1), booksFromRepository.get(0));
+		assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
+		assertEquals(3, booksFromRepository.size());
+		assertEquals(books.get(1), booksFromRepository.get(0));
 		booksFromRepository.clear();
 
 		Iterable<Book> iBooks = bookRepository.findAll(new Sort(Direction.ASC, "publicationDate"));
-		Assert.assertTrue(iBooks.iterator().hasNext());
-		Assert.assertEquals(books.get(0), iBooks.iterator().next());
+		assertTrue(iBooks.iterator().hasNext());
+		assertEquals(books.get(0), iBooks.iterator().next());
 
 		booksFromRepository = bookRepository.findByGenreAndPages(books.get(0).getGenre(), books.get(0).getPages());
-		Assert.assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
-		Assert.assertEquals(books.get(0), booksFromRepository.get(0));
+		assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
+		assertEquals(books.get(0), booksFromRepository.get(0));
+
+		booksFromRepository = bookRepository.findByGenre(books.get(0).getGenre(), new PageRequest(0, 2));
+		assertTrue(CollectionUtils.isNotEmpty(booksFromRepository));
+		assertEquals(2, booksFromRepository.size());
+
 	}
 
 }
