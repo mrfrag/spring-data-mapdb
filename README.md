@@ -50,6 +50,6 @@ for detailed example check `src/test/java/org/springframework/data/mapdb/example
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
 
-##License
+## License
 
 MIT License
