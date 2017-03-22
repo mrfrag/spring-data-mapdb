@@ -40,7 +40,7 @@ public class RepositoryConfiguration {
 }
 ```
 
-for detailed example check `[src/test/java/org/springframework/data/mapdb/example/](https://github.com/mrfrag/spring-data-mapdb/tree/master/src/test/java/org/springframework/data/mapdb/example)`
+for detailed example check [src/test/java/org/springframework/data/mapdb/example/](https://github.com/mrfrag/spring-data-mapdb/tree/master/src/test/java/org/springframework/data/mapdb/example)
 
 ## Contributing
 
