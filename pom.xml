@@ -4,7 +4,7 @@
 
 	<groupId>org.mapdb</groupId>
 	<artifactId>spring-data-mapdb</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Spring Data MapDB</name>
@@ -21,7 +21,6 @@
 		<springdata.keyvalue>1.1.2.RELEASE</springdata.keyvalue>
 		<mapdb.version>3.0.3</mapdb.version>
 		<junit.version>4.12</junit.version>
-		<guava.version>21.0</guava.version>
 		<beanutils.version>1.9.3</beanutils.version>
 	</properties>
 
@@ -37,12 +36,6 @@
 			<groupId>org.mapdb</groupId>
 			<artifactId>mapdb</artifactId>
 			<version>${mapdb.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
 		</dependency>
 
 		<dependency>

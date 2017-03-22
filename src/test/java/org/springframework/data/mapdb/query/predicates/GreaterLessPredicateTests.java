@@ -1,11 +1,10 @@
 package org.springframework.data.mapdb.query.predicates;
 
 import java.time.LocalDate;
+import java.util.function.Predicate;
 
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.google.common.base.Predicate;
 
 public class GreaterLessPredicateTests {
 
@@ -14,12 +13,12 @@ public class GreaterLessPredicateTests {
 	public void testLess() {
 		Predicate predicate = GreaterLessPredicate.ls(10l);
 
-		Assert.assertTrue(predicate.apply(5));
-		Assert.assertFalse(predicate.apply(10));
-		Assert.assertFalse(predicate.apply(15));
+		Assert.assertTrue(predicate.test(5));
+		Assert.assertFalse(predicate.test(10));
+		Assert.assertFalse(predicate.test(15));
 
-		Assert.assertTrue(predicate.apply(new Integer(8)));
-		Assert.assertFalse(predicate.apply(new Integer(12)));
+		Assert.assertTrue(predicate.test(new Integer(8)));
+		Assert.assertFalse(predicate.test(new Integer(12)));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -27,12 +26,12 @@ public class GreaterLessPredicateTests {
 	public void testGreater() {
 		Predicate predicate = GreaterLessPredicate.gr(10);
 
-		Assert.assertTrue(predicate.apply(15));
-		Assert.assertFalse(predicate.apply(10));
-		Assert.assertFalse(predicate.apply(5));
+		Assert.assertTrue(predicate.test(15));
+		Assert.assertFalse(predicate.test(10));
+		Assert.assertFalse(predicate.test(5));
 
-		Assert.assertTrue(predicate.apply(new Integer(18)));
-		Assert.assertFalse(predicate.apply(new Integer(2)));
+		Assert.assertTrue(predicate.test(new Integer(18)));
+		Assert.assertFalse(predicate.test(new Integer(2)));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -40,13 +39,13 @@ public class GreaterLessPredicateTests {
 	public void testLessOrEqual() {
 		Predicate predicate = GreaterLessPredicate.le(new Long(10));
 
-		Assert.assertTrue(predicate.apply(5l));
-		Assert.assertTrue(predicate.apply(10l));
-		Assert.assertFalse(predicate.apply(15l));
+		Assert.assertTrue(predicate.test(5l));
+		Assert.assertTrue(predicate.test(10l));
+		Assert.assertFalse(predicate.test(15l));
 
-		Assert.assertTrue(predicate.apply(new Long(8)));
-		Assert.assertTrue(predicate.apply(new Long(10)));
-		Assert.assertFalse(predicate.apply(new Long(12)));
+		Assert.assertTrue(predicate.test(new Long(8)));
+		Assert.assertTrue(predicate.test(new Long(10)));
+		Assert.assertFalse(predicate.test(new Long(12)));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -54,13 +53,13 @@ public class GreaterLessPredicateTests {
 	public void testGreaterOrEqual() {
 		Predicate predicate = GreaterLessPredicate.ge(10);
 
-		Assert.assertTrue(predicate.apply(15));
-		Assert.assertTrue(predicate.apply(10));
-		Assert.assertFalse(predicate.apply(5));
+		Assert.assertTrue(predicate.test(15));
+		Assert.assertTrue(predicate.test(10));
+		Assert.assertFalse(predicate.test(5));
 
-		Assert.assertTrue(predicate.apply(new Integer(18)));
-		Assert.assertTrue(predicate.apply(new Integer(10)));
-		Assert.assertFalse(predicate.apply(new Integer(2)));
+		Assert.assertTrue(predicate.test(new Integer(18)));
+		Assert.assertTrue(predicate.test(new Integer(10)));
+		Assert.assertFalse(predicate.test(new Integer(2)));
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -68,8 +67,8 @@ public class GreaterLessPredicateTests {
 	public void testGreaterOrEqualDate() {
 		Predicate predicate = GreaterLessPredicate.ge(LocalDate.now());
 
-		Assert.assertTrue(predicate.apply(LocalDate.now().plusYears(10)));
-		Assert.assertFalse(predicate.apply(LocalDate.now().minusYears(10)));
+		Assert.assertTrue(predicate.test(LocalDate.now().plusYears(10)));
+		Assert.assertFalse(predicate.test(LocalDate.now().minusYears(10)));
 
 	}
 

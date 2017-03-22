@@ -1,28 +1,16 @@
-/*
- * Copyright 2017-2018 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.springframework.data.mapdb.query;
 
 import java.util.Iterator;
+import java.util.function.Predicate;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.data.mapdb.query.predicates.EqualsPredicate;
 import org.springframework.data.mapdb.query.predicates.GreaterLessPredicate;
 import org.springframework.data.mapdb.query.predicates.ILikePredicate;
 import org.springframework.data.mapdb.query.predicates.LikePredicate;
+import org.springframework.data.mapdb.query.predicates.NullCheckPredicate;
 import org.springframework.data.mapdb.query.predicates.PropertyPredicate;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
@@ -31,16 +19,13 @@ import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.data.repository.query.parser.Part.Type;
 import org.springframework.data.repository.query.parser.PartTree;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
+public class QueryCreator extends AbstractQueryCreator<KeyValueQuery<Predicate<?>>, Predicate<?>> {
 
-public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predicate<?>>, Predicate<?>> {
-
-	public GuavaQueryCreator(PartTree tree) {
+	public QueryCreator(PartTree tree) {
 		super(tree);
 	}
 
-	public GuavaQueryCreator(PartTree tree, ParameterAccessor parameters) {
+	public QueryCreator(PartTree tree, ParameterAccessor parameters) {
 		super(tree, parameters);
 	}
 
@@ -55,7 +40,7 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected Predicate<?> create(Part part, Iterator<Object> iterator) {
-		return this.from(part, (Iterator<Comparable<?>>) (Iterator) iterator);
+		return from(part, (Iterator<Comparable<?>>) (Iterator) iterator);
 	}
 
 	/*
@@ -69,7 +54,7 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	protected Predicate<?> and(Part part, Predicate<?> base, Iterator<Object> iterator) {
-		return Predicates.and((Predicate<Object>) base, (Predicate<Object>) this.from(part, (Iterator<Comparable<?>>) (Iterator) iterator));
+		return ((Predicate<Object>) base).and((Predicate<Object>) from(part, (Iterator<Comparable<?>>) (Iterator) iterator));
 	}
 
 	/*
@@ -82,7 +67,7 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 	@SuppressWarnings("unchecked")
 	@Override
 	protected Predicate<?> or(Predicate<?> base, Predicate<?> criteria) {
-		return Predicates.or((Predicate<Object>) base, (Predicate<Object>) criteria);
+		return ((Predicate<Object>) base).or((Predicate<Object>) criteria);
 	}
 
 	/*
@@ -113,13 +98,20 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 
 		switch (type) {
 
-		case FALSE:
 		case TRUE:
-			predicate = fromBooleanVariant(type);
+			predicate = new EqualsPredicate(true);
+			break;
+
+		case FALSE:
+			predicate = new EqualsPredicate(false);
 			break;
 
 		case SIMPLE_PROPERTY:
-			predicate = fromEqualityVariant(type, ignoreCase, iterator);
+			if (ignoreCase) {
+				predicate = new ILikePredicate(iterator.next().toString());
+			} else {
+				predicate = new EqualsPredicate(iterator.next());
+			}
 			break;
 
 		case GREATER_THAN:
@@ -130,14 +122,18 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 			break;
 
 		case LIKE:
-			predicate = fromLikeVariant(type, iterator);
+			predicate = new LikePredicate(iterator.next().toString());
+			break;
+
+		case IS_NULL:
+			predicate = NullCheckPredicate.isNull();
 			break;
 
 		case IS_NOT_NULL:
-		case IS_NULL:
-			predicate = fromNullVariant(type);
+			predicate = NullCheckPredicate.notNull();
 			break;
 
+		// TODO
 		/*
 		 * case AFTER: case BEFORE: case BETWEEN: case CONTAINING: case
 		 * ENDING_WITH: case EXISTS: case IN: case NEAR: case
@@ -150,20 +146,6 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 
 		return PropertyPredicate.wrap(predicate, property);
 
-	}
-
-	private Predicate<?> fromBooleanVariant(Type type) {
-
-		switch (type) {
-
-		case TRUE:
-			return Predicates.equalTo(true);
-		case FALSE:
-			return Predicates.equalTo(false);
-
-		default:
-			throw new InvalidDataAccessApiUsageException(String.format("Logic error for '%s' in query", type));
-		}
 	}
 
 	private Predicate<?> fromInequalityVariant(Type type, boolean ignoreCase, Iterator<Comparable<?>> iterator) {
@@ -182,48 +164,6 @@ public class GuavaQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predic
 			return GreaterLessPredicate.ls(iterator.next());
 		case LESS_THAN_EQUAL:
 			return GreaterLessPredicate.le(iterator.next());
-
-		default:
-			throw new InvalidDataAccessApiUsageException(String.format("Logic error for '%s' in query", type));
-		}
-	}
-
-	private Predicate<?> fromEqualityVariant(Type type, boolean ignoreCase, Iterator<Comparable<?>> iterator) {
-
-		switch (type) {
-
-		case SIMPLE_PROPERTY:
-			if (ignoreCase) {
-				return new ILikePredicate(iterator.next().toString());
-			} else {
-				return Predicates.equalTo(iterator.next());
-			}
-
-		default:
-			throw new InvalidDataAccessApiUsageException(String.format("Logic error for '%s' in query", type));
-		}
-	}
-
-	private Predicate<?> fromLikeVariant(Type type, Iterator<Comparable<?>> iterator) {
-
-		switch (type) {
-
-		case LIKE:
-			return new LikePredicate(iterator.next().toString());
-
-		default:
-			throw new InvalidDataAccessApiUsageException(String.format("Logic error for '%s' in query", type));
-		}
-	}
-
-	private Predicate<?> fromNullVariant(Type type) {
-
-		switch (type) {
-
-		case IS_NULL:
-			return Predicates.isNull();
-		case IS_NOT_NULL:
-			return Predicates.notNull();
 
 		default:
 			throw new InvalidDataAccessApiUsageException(String.format("Logic error for '%s' in query", type));
