@@ -5,7 +5,6 @@ Bundle-Version: ${project.version}
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Template:
- com.google.common.*;version="${guava.version}",
  org.apache.commons.*;version="${beanutils.version}",
  org.mapdb.*;version="${mapdb.version}",
  org.springframework.*;version="${spring:[=.=.=,+1.0.0)}",
