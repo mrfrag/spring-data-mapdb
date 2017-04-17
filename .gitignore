@@ -3,3 +3,5 @@ target
 .project
 .settings
 /release.properties
+/log.txt
+/pom.xml.releaseBackup
