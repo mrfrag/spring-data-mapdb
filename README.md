@@ -5,7 +5,13 @@ Many thanks to [Spring Data Hazelcast](https://github.com/hazelcast/spring-data-
 
 ## Installation
 
-Clone the repo and build the project.
+```xml
+<dependency>
+    <groupId>org.mapdb</groupId>
+    <artifactId>spring-data-mapdb</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+</dependency>
+```
 
 ## Usage
 
