@@ -7,9 +7,9 @@ Many thanks to [Spring Data Hazelcast](https://github.com/hazelcast/spring-data-
 
 ```xml
 <dependency>
-    <groupId>org.mapdb</groupId>
+    <groupId>com.github.mrfrag</groupId>
     <artifactId>spring-data-mapdb</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
