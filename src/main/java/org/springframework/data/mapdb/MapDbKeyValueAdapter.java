@@ -48,7 +48,7 @@ public class MapDbKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	@Override
 	public Iterable<?> getAllOf(Serializable keyspace) {
-		return getMap(keyspace).getEntries();
+		return getMap(keyspace).getValues();
 	}
 
 	@SuppressWarnings("unchecked")
